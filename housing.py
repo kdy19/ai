@@ -1,15 +1,16 @@
-from sklearn.model_selection import StratifiedShuffleSplit
-import matplotlib.pyplot as plt
-import urllib.request
-import pandas as pd
-import numpy as np
-import tarfile
 import os
+import tarfile
+import urllib.request
 
+import numpy as np
+import pandas as pd
+from sklearn.model_selection import StratifiedShuffleSplit
+from sklearn.preprocessing import OrdinalEncoder
 
 DOWNLOAD_ROOT = 'https://raw.githubusercontent.com/rickiepark/handson-ml2/master/'
 HOUSING_PATH = os.path.join('datasets', 'housing')
 HOUSING_URL = DOWNLOAD_ROOT + 'datasets/housing/housing.tgz'
+
 
 def fetch_housing_data(housing_url=HOUSING_URL, housing_path=HOUSING_PATH):
     if not os.path.isdir(housing_path):
@@ -36,24 +37,24 @@ def split_train_test(data, test_ratio):
 
 
 if __name__ == '__main__':
-    #fetch_housing_data()
+    # fetch_housing_data()
     housing = load_housing_data()
-    #print(housing.head())
-    #print(housing.info())
-    #print(housing.describe())
-    #housing.hist(bins=50, figsize=(20,15))
-    #plt.show()
+    # print(housing.head())
+    # print(housing.info())
+    # print(housing.describe())
+    # housing.hist(bins=50, figsize=(20,15))
+    # plt.show()
 
     train_set, test_set = split_train_test(housing, 0.2)
     print(len(train_set))
     print(len(test_set))
 
     housing['income_cat'] = pd.cut(housing['median_income'],
-                                    bins=[0., 1.5, 3.0, 4.5, 6., np.inf],
-                                    labels=[1, 2, 3, 4, 5])
+                                   bins=[0., 1.5, 3.0, 4.5, 6., np.inf],
+                                   labels=[1, 2, 3, 4, 5])
 
-    #housing['income_cat'].hist()
-    #plt.show()
+    # housing['income_cat'].hist()
+    # plt.show()
 
     split = StratifiedShuffleSplit(n_splits=1, test_size=0.2, random_state=42)
     for train_index, test_index in split.split(housing, housing['income_cat']):
@@ -62,9 +63,9 @@ if __name__ == '__main__':
 
     print(strat_test_set['income_cat'].value_counts() / len(strat_test_set))
 
-    #housing.plot(kind='scatter', x='longitude', y='latitude', alpha=0.1)
-    #plt.show()
-    
+    # housing.plot(kind='scatter', x='longitude', y='latitude', alpha=0.1)
+    # plt.show()
+
     '''
     housing.plot(kind='scatter', x='longitude', y='latitude', alpha=0.4,
                 s=housing['population']/100, label='population', figsize=(10,7),
@@ -74,8 +75,8 @@ if __name__ == '__main__':
     plt.show()
     '''
 
-    #corr_matrix = housing.corr()
-    #print(corr_matrix['median_house_value'].sort_values(ascending=False))
+    # corr_matrix = housing.corr()
+    # print(corr_matrix['median_house_value'].sort_values(ascending=False))
 
     '''
     housing['rooms_per_household'] = housing['total_rooms'] / housing['households']
@@ -85,8 +86,11 @@ if __name__ == '__main__':
     corr_matrix = housing.corr()
     print(corr_matrix['median_house_value'].sort_values(ascending=False))
     '''
-    
 
+    housing_cat = housing[['ocean_proximity']]
+    print(housing_cat.head(10))
 
-
-
+    ordinal_encoder = OrdinalEncoder()
+    housing_cat_encode = ordinal_encoder.fit_transform(housing_cat)
+    print(housing_cat_encode[:10])
+    print(ordinal_encoder.categories_)

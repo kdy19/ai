@@ -1,7 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-
 '''
 def step_function(x):
     if x > 0:
@@ -12,8 +11,8 @@ def step_function(x):
 
 
 def step_function(x):
-    y =  x > 0
-    
+    y = x > 0
+
     print(type(y), y)
     return y.astype(np.int)
 

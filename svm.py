@@ -1,9 +1,8 @@
-from sklearn.preprocessing import StandardScaler
-from sklearn.pipeline import Pipeline
-from sklearn.svm import LinearSVC
-from sklearn import datasets
 import numpy as np
-
+from sklearn import datasets
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
+from sklearn.svm import LinearSVC
 
 iris = datasets.load_iris()
 X = iris['data'][:, (2,3)]
